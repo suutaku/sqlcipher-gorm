@@ -33,7 +33,11 @@ func (dialector Dialector) Initialize(db *gorm.DB) (err error) {
 	})
 	db.ConnPool, err = sql.Open("sqlite3", dialector.DSN)
 	p := "PRAGMA cipher_compatibility = 1;"
-	_, err = db.DB().Exec(p)
+	sdb, err := db.DB()
+	if err != nil {
+		return err
+	}
+	_, err = sdb.Exec(p)
 	if err != nil {
 		return err
 	}
